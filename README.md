@@ -29,8 +29,8 @@ stream1.bind(some_side_effect); // Bind to stream1
 Bound functions will be called when values are "push"ed.
 
 ```c++
-stream1.push(0);
-stream1.push(1);
+stream0.push(0);
+stream0.push(1);
 ```
 
 There are many constructors to perform various FRP like tasks.

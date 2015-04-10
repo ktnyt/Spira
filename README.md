@@ -1,7 +1,7 @@
 # SpiraFRP version 1
 Yet another C++ library for functional reactive style programming.
 
-C++14 is required at the time of writing.
+C++11 is required for compiling.
 
 Example usage
 -------------

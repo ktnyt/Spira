@@ -32,6 +32,20 @@ namespace spira {
     std::list<std::function<void(T)> > glue_list;
     std::list<std::function<void(T)> > hook_list;
 
+    void push(T value) {
+      if(this->flag_d == DUPLICATES::SKIP) {
+        if(this->value == value) {
+          return;
+        }
+      }
+      this->value = value;
+      this->call();
+    }
+
+    void bind(const std::function<void(T)>function) {
+      this->bind_list.push_back(function);
+    }
+
     void glue(const std::function<void(T)> function) {
       this->glue_list.push_back(function);
     }
@@ -56,7 +70,7 @@ namespace spira {
 
   /* Original Constructor */
   template<typename T>
-  stream<T>::stream(DUPLICATES d_flag) : impl(std::make_unique<stream<T>::stream_impl>()) {
+  stream<T>::stream(DUPLICATES d_flag) : impl(std::unique_ptr<stream<T>::stream_impl>(new stream_impl())) {
     this->impl->flag_d = d_flag;
   }
 
@@ -138,18 +152,12 @@ namespace spira {
   }
 
   template<typename T>
-  void stream<T>::bind(const std::function<void(T)> function) {
-    this->impl->bind_list.push_back(function);
+  void stream<T>::push(const T& value) {
+    this->impl->push(value);
   }
 
   template<typename T>
-  void stream<T>::push(const T& value) {
-    if(this->impl->flag_d == DUPLICATES::SKIP) {
-      if(this->impl->value == value) {
-        return;
-      }
-    }
-    this->impl->value = value;
-    this->impl->call();
+  void stream<T>::bind(const std::function<void(T)> function) {
+    this->impl->bind(function);
   }
 }

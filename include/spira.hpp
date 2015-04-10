@@ -26,6 +26,8 @@
 #include <functional>
 #include <memory>
 
+#include "config.h"
+
 namespace spira {
   enum class SAMPLED_BY {FIRST, SECOND, BOTH};
   enum class DUPLICATES {TAKE, SKIP};
@@ -63,9 +65,11 @@ namespace spira {
     template<typename T1, typename T2>
     stream(stream<T1>& stream1, stream<T2>& stream2, SAMPLED_BY s_flag=SAMPLED_BY::BOTH, DUPLICATES d_flag=DUPLICATES::TAKE);
 
-    void bind(const std::function<void(T)> function);
-
+    /* Push values into stream */
     void push(const T& value);
+
+    /* Bind side-effects to stream */
+    void bind(const std::function<void(T)> function);
 
   private:
     template<typename U>

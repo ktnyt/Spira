@@ -22,6 +22,11 @@
 **
 ******************************************************************************/
 
+#ifndef __SPIRA_STREAM_IMPL_HPP__
+#define __SPIRA_STREAM_IMPL_HPP__
+
+#include <iostream>
+
 namespace spira {
   template<typename T>
   struct stream<T>::stream_impl {
@@ -83,27 +88,26 @@ namespace spira {
   /* Mirror Constructor */
   template<typename T>
   stream<T>::stream(stream<T>& stream0, DUPLICATES d_flag) : stream(d_flag) {
-    stream0.impl->hook([&](T value){this->push(value);});
+    stream0.impl->hook([=](T value){this->push(value);});
   }
 
   /* Merge Constructor */
   template<typename T>
   stream<T>::stream(stream<T>& stream1, stream<T>& stream2, DUPLICATES d_flag) : stream(d_flag) {
-    stream1.impl->hook([&](T value){this->push(value);});
-    stream2.impl->hook([&](T value){this->push(value);});
+    stream1.impl->hook([=](T value){this->push(value);});
+    stream2.impl->hook([=](T value){this->push(value);});
   }
 
   /* Filter Constructor */
   template<typename T>
   stream<T>::stream(stream<T>& stream0, const std::function<bool(T)> filter, DUPLICATES d_flag) : stream(d_flag) {
-    stream0.impl->hook([&](T value){if(filter(value)) this->push(value);});
+    stream0.impl->hook([=](T value){if(filter(value)) this->push(value);});
   }
 
   /* While Constructor */
   template<typename T>
   stream<T>::stream(stream<T>& stream0, stream<bool>& stream1, TAKE_WHILE t_flag, DUPLICATES d_flag) : stream(d_flag) {
-    stream0.impl->hook([&, t_flag](T value){
-        std::string str = stream1.impl->value ? "TRUE" : "FALSE";
+    stream0.impl->hook([=, &stream0, &stream1](T value){
         if(t_flag == TAKE_WHILE::TRUE) {
           if(stream1.impl->value) {
             this->push(value);
@@ -121,14 +125,14 @@ namespace spira {
   template<typename T>
   template<typename U>
   stream<T>::stream(stream<U>& stream0, const std::function<T(U)> map, DUPLICATES d_flag) : stream(d_flag) {
-    stream0.impl->hook([&](U value){this->push(map(value));});
+    stream0.impl->hook([=](U value){this->push(map(value));});
   }
 
   /* Scan Constructor */
   template<typename T>
   stream<T>::stream(stream<T>& stream0, T seed, const std::function<T(T,T)> scan, DUPLICATES d_flag) : stream(d_flag) {
     this->impl->value = seed;
-    stream0.impl->hook([&](T value){this->push(scan(this->impl->value, value));});
+    stream0.impl->hook([=](T value){this->push(scan(this->impl->value, value));});
   }
 
   /* Combine Constructor */
@@ -137,13 +141,13 @@ namespace spira {
   stream<T>::stream(stream<T1>& stream1, stream<T2>& stream2, SAMPLED_BY s_flag, DUPLICATES d_flag) : stream(d_flag) {
     this->impl->value.first = stream1.impl->value;
     this->impl->value.second = stream2.impl->value;
-    stream1.impl->glue([&, s_flag](T1 value){
+    stream1.impl->glue([=](T1 value){
         this->impl->value.first = value;
         if(s_flag != SAMPLED_BY::SECOND) {
           this->impl->call();
         }
       });
-    stream2.impl->glue([&, s_flag](T2 value){
+    stream2.impl->glue([=](T2 value){
         this->impl->value.second = value;
         if(s_flag != SAMPLED_BY::FIRST) {
           this->impl->call();
@@ -161,3 +165,5 @@ namespace spira {
     this->impl->bind(function);
   }
 }
+
+#endif

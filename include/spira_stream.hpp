@@ -73,6 +73,8 @@ namespace spira {
 
     /* Bind side-effects to stream */
     void bind(const std::function<void(T)> function);
+    
+    void skip(DUPLICATES d_flag=DUPLICATES::SKIP);
 
   private:
     template<typename U>

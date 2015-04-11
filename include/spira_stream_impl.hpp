@@ -164,6 +164,11 @@ namespace spira {
   void stream<T>::bind(const std::function<void(T)> function) {
     this->impl->bind(function);
   }
+
+  template<typename T>
+  void stream<T>::skip(DUPLICATES d_flag) {
+    this->impl->flag_d = d_flag;
+  }
 }
 
 #endif

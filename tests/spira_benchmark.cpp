@@ -301,6 +301,148 @@ static void stream_wrapper_combine_benchmark(benchmark::State& state) {
   }
 }
 
+static void stream_wrapper_method_mirror_benchmark(benchmark::State& state) {
+  spira::streamw<int> stream0;
+  spira::streamw<int> stream1;
+  int out(0);
+  int iter(0);
+
+  stream1 = stream0.mirror();
+  stream1.bind([&](int value){out = value;});
+
+  while(state.KeepRunning()) {
+    stream0.push(iter);
+    iter++;
+  }
+}
+
+static void stream_wrapper_method_mirror10_benchmark(benchmark::State& state) {
+  spira::streamw<int> stream0;
+  spira::streamw<int> stream1;
+  spira::streamw<int> stream2;
+  spira::streamw<int> stream3;
+  spira::streamw<int> stream4;
+  spira::streamw<int> stream5;
+  spira::streamw<int> stream6;
+  spira::streamw<int> stream7;
+  spira::streamw<int> stream8;
+  spira::streamw<int> stream9;
+  int out(0);
+  int iter(0);
+
+  stream1 = stream0.mirror();
+  stream2 = stream1.mirror();
+  stream3 = stream2.mirror();
+  stream4 = stream3.mirror();
+  stream5 = stream4.mirror();
+  stream6 = stream5.mirror();
+  stream7 = stream6.mirror();
+  stream8 = stream7.mirror();
+  stream9 = stream8.mirror();
+  stream9.bind([&](int value){out = value;});
+
+  while(state.KeepRunning()) {
+    stream0.push(iter);
+    iter++;
+  }
+}
+
+static void stream_wrapper_method_merge_benchmark(benchmark::State& state) {
+  spira::streamw<int> stream0;
+  spira::streamw<int> stream1;
+  spira::streamw<int> stream2;
+  int out(0);
+  int iter(0);
+
+  stream2 = stream0.merge(stream1);
+  stream2.bind([&](int value){out = value;});
+
+  while(state.KeepRunning()) {
+    stream0.push(iter);
+    stream1.push(iter);
+    iter++;
+  }
+}
+
+static void stream_wrapper_method_filter_benchmark(benchmark::State& state) {
+  spira::streamw<int> stream0;
+  spira::streamw<int> stream1;
+  int out(0);
+  int iter(0);
+
+  stream1 = stream0.filter(std::function<bool(int)>([](int value){return value != 0;}));
+  stream1.bind([&](int value){out = value;});
+
+  while(state.KeepRunning()) {
+    stream0.push((iter & 1));
+    iter++;
+  }
+}
+
+static void stream_wrapper_method_while_benchmark(benchmark::State& state) {
+  spira::streamw<int> stream0;
+  spira::streamw<bool> stream1;
+  spira::streamw<int> stream2;
+  int out(0);
+  int iter(0);
+
+  stream2 = stream0.whilst(stream1, spira::TAKE_WHILE::TRUE);
+  stream2.bind([&](int value){out = value;});
+
+  while(state.KeepRunning()) {
+    stream0.push((iter & 1));
+    stream1.push((iter != 0));
+    iter++;
+  }
+}
+
+static void stream_wrapper_method_map_benchmark(benchmark::State& state) {
+  spira::streamw<int> stream0;
+  spira::streamw<bool> stream1;
+  bool out(0);
+  int iter(0);
+
+  stream1 = stream0.map(std::function<bool(int)>([](int value){return value != 0;}));
+  stream1.bind([&](bool value){out = value;});
+
+  while(state.KeepRunning()) {
+    stream0.push(iter);
+    iter++;
+  }
+}
+
+static void stream_wrapper_method_scan_benchmark(benchmark::State& state) {
+  spira::streamw<int> stream0;
+  spira::streamw<int> stream1;
+  int out(0);
+  int iter(0);
+
+  stream1 = stream0.scan(0, std::function<int(int,int)>([](int v1, int v2){return v1 + v2;}));
+  stream1.bind([&](bool value){out = value;});
+
+  while(state.KeepRunning()) {
+    stream0.push(iter % 10);
+    iter++;
+  }
+}
+
+static void stream_wrapper_method_combine_benchmark(benchmark::State& state) {
+  spira::streamw<int> stream0;
+  spira::streamw<bool> stream1;
+  spira::streamw<std::pair<int, bool> > stream2;
+  std::pair<int, bool> out(std::pair<int, bool>(0, false));
+  int iter(0);
+
+  stream1 = stream0.map(std::function<bool(int)>([](int value){return ((value & 1) == 1);}));
+  stream2 = stream0.combine(stream1, spira::SAMPLED_BY::SECOND);
+  stream2.bind([&](std::pair<int, bool> value){out = value;});
+
+  while(state.KeepRunning()) {
+    stream0.push(iter);
+    iter++;
+  }
+}
+
 BENCHMARK(stream_simple_benchmark);
 BENCHMARK(stream_mirror_benchmark);
 BENCHMARK(stream_mirror10_benchmark);
@@ -320,6 +462,15 @@ BENCHMARK(stream_wrapper_while_benchmark);
 BENCHMARK(stream_wrapper_map_benchmark);
 BENCHMARK(stream_wrapper_scan_benchmark);
 BENCHMARK(stream_wrapper_combine_benchmark);
+
+BENCHMARK(stream_wrapper_method_mirror_benchmark);
+BENCHMARK(stream_wrapper_method_mirror10_benchmark);
+BENCHMARK(stream_wrapper_method_merge_benchmark);
+BENCHMARK(stream_wrapper_method_filter_benchmark);
+BENCHMARK(stream_wrapper_method_while_benchmark);
+BENCHMARK(stream_wrapper_method_map_benchmark);
+BENCHMARK(stream_wrapper_method_scan_benchmark);
+BENCHMARK(stream_wrapper_method_combine_benchmark);
 
 BENCHMARK_MAIN();
 

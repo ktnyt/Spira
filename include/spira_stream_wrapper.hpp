@@ -26,6 +26,7 @@
 #define __SPIRA_STREAM_WRAPPER_HPP__
 
 #include "spira_stream.hpp"
+#include <iostream>
 
 namespace spira {
   template<typename T>
@@ -77,6 +78,48 @@ namespace spira {
     /* Bind side-effects to streamw */
     void bind(const std::function<void(T)> function) {
       this->ptr->bind(function);
+    }
+
+    streamw<T>& skip(DUPLICATES d_flag=DUPLICATES::SKIP) {
+      this->ptr->skip();
+      return *this;
+    }
+
+    streamw<T> mirror(DUPLICATES d_flag=DUPLICATES::TAKE) {
+      streamw<T> ret((*this), d_flag);
+      return ret;
+    }
+
+    streamw<T> merge(streamw<T>& streamw0, DUPLICATES d_flag=DUPLICATES::TAKE) {
+      streamw<T> ret((*this), streamw0, d_flag);
+      return ret;
+    }
+
+    streamw<T> filter(const std::function<bool(T)> filter, DUPLICATES d_flag=DUPLICATES::TAKE) {
+      streamw<T> ret((*this), filter, d_flag);
+      return ret;
+    }
+
+    streamw<T> whilst(streamw<bool>& streamw0, TAKE_WHILE t_flag=TAKE_WHILE::TRUE, DUPLICATES d_flag=DUPLICATES::TAKE) {
+      streamw<T> ret((*this), streamw0, t_flag, d_flag);
+      return ret;
+    }
+
+    template<typename U>
+    streamw<U> map(const std::function<U(T)> map, DUPLICATES d_flag=DUPLICATES::TAKE) {
+      streamw<U> ret((*this), map, d_flag);
+      return ret;
+    }
+
+    streamw<T> scan(T seed, const std::function<T(T,T)> scan, DUPLICATES d_flag=DUPLICATES::TAKE) {
+      streamw<T> ret((*this), seed, scan, d_flag);
+      return ret;
+    }
+
+    template<typename U>
+    streamw<std::pair<T, U> > combine(streamw<U>& streamw0, SAMPLED_BY s_flag=SAMPLED_BY::BOTH, DUPLICATES d_flag=DUPLICATES::TAKE) {
+      streamw<std::pair<T, U> > ret((*this), streamw0, s_flag, d_flag);
+      return ret;
     }
 
   private:

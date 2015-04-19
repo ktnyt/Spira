@@ -23,4 +23,4 @@
 ******************************************************************************/
 
 #include "spira_stream.hpp"
-#include "spira_stream_wrapper.hpp"
+

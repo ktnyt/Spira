@@ -22,13 +22,13 @@
 **
 ******************************************************************************/
 
-#include <string>
+#include <memory>
 
 #include "gtest/gtest.h"
 #include "spira.hpp"
 
 namespace spira_test {
-  TEST(stream_test, stream_simple_test) {
+  TEST(stream, simple_test) {
     spira::stream<int> stream0;
     int out0(0);
 
@@ -38,7 +38,7 @@ namespace spira_test {
     ASSERT_EQ(out0, 01);
   }
 
-  TEST(stream_test, stream_seed_test) {
+  TEST(stream, seed_test) {
     spira::stream<int> stream0(0);
     int out0(0);
 
@@ -48,7 +48,7 @@ namespace spira_test {
     ASSERT_EQ(out0, 01);
   }
 
-  TEST(stream_test, stream_skip_test) {
+  TEST(stream, skip_test) {
     spira::stream<int> stream0(spira::DUPLICATES::SKIP);
     int out0(0);
 
@@ -66,7 +66,7 @@ namespace spira_test {
     ASSERT_EQ(out0, 2);
   }
 
-  TEST(stream_test, stream_mirror_test) {
+  TEST(stream, mirror_test) {
     spira::stream<int> stream0;
     spira::stream<int> stream1(stream0);
     int out0(0);
@@ -84,7 +84,7 @@ namespace spira_test {
     ASSERT_EQ(out1, 2);
   }
 
-  TEST(stream_test, stream_mirror10_test) {
+  TEST(stream, mirror10_test) {
     spira::stream<int> stream0;
     spira::stream<int> stream1(stream0);
     spira::stream<int> stream2(stream1);
@@ -238,7 +238,7 @@ namespace spira_test {
     ASSERT_EQ(out9, 0);
   }
 
-  TEST(stream_test, stream_merge_test) {
+  TEST(stream, merge_test) {
     spira::stream<int> stream0;
     spira::stream<int> stream1;
     spira::stream<int> stream2(stream0, stream1);
@@ -266,7 +266,52 @@ namespace spira_test {
     ASSERT_EQ(out2, 3);
   }
 
-  TEST(stream_test, stream_filter_test) {
+  TEST(stream, list_merge_test) {
+    spira::stream<int> stream0;
+    spira::stream<int> stream1;
+    spira::stream<int> stream2;
+    std::list<spira::stream<int>* > streams;
+    streams.push_back(&stream0);
+    streams.push_back(&stream1);
+    streams.push_back(&stream2);
+    spira::stream<int> stream3(streams);
+
+    int out0(0);
+    int out1(0);
+    int out2(0);
+    int out3(0);
+    
+    stream0.bind([&](int value){out0 = value;});
+    stream1.bind([&](int value){out1 = value;});
+    stream2.bind([&](int value){out2 = value;});
+    stream3.bind([&](int value){out3 = value;});
+    ASSERT_EQ(out0, 0);
+    ASSERT_EQ(out1, 0);
+    ASSERT_EQ(out2, 0);
+    ASSERT_EQ(out3, 0);
+    stream0.push(1);
+    ASSERT_EQ(out0, 1);
+    ASSERT_EQ(out1, 0);
+    ASSERT_EQ(out2, 0);
+    ASSERT_EQ(out3, 1);
+    stream1.push(2);
+    ASSERT_EQ(out0, 1);
+    ASSERT_EQ(out1, 2);
+    ASSERT_EQ(out2, 0);
+    ASSERT_EQ(out3, 2);
+    stream2.push(3);
+    ASSERT_EQ(out0, 1);
+    ASSERT_EQ(out1, 2);
+    ASSERT_EQ(out2, 3);
+    ASSERT_EQ(out3, 3);
+    stream3.push(4);
+    ASSERT_EQ(out0, 1);
+    ASSERT_EQ(out1, 2);
+    ASSERT_EQ(out2, 3);
+    ASSERT_EQ(out3, 4);
+  }
+
+  TEST(stream, filter_test) {
     spira::stream<int> stream0;
     spira::stream<int> stream1(stream0, std::function<bool(int)>([](int value){return value != 0;}));
     int out0(0);
@@ -287,7 +332,7 @@ namespace spira_test {
     ASSERT_EQ(out1, 2);
   }
 
-  TEST(stream_test, stream_while_true_test) {
+  TEST(stream, while_true_test) {
     spira::stream<int> stream0;
     spira::stream<bool> stream1;
     spira::stream<int> stream2(stream0, stream1, spira::TAKE_WHILE::TRUE);
@@ -323,7 +368,7 @@ namespace spira_test {
     ASSERT_EQ(out2, 2);
   }
 
-  TEST(stream_test, stream_while_false_test) {
+  TEST(stream, while_false_test) {
     spira::stream<int> stream0;
     spira::stream<bool> stream1;
     spira::stream<int> stream2(stream0, stream1, spira::TAKE_WHILE::FALSE);
@@ -359,7 +404,7 @@ namespace spira_test {
     ASSERT_EQ(out2, 3);
   }
 
-  TEST(stream_test, stream_map_test) {
+  TEST(stream, map_test) {
     spira::stream<int> stream0;
     spira::stream<bool> stream1(stream0, std::function<bool(int)>([](int value){return value != 0;}));
     int out0(0);
@@ -380,7 +425,7 @@ namespace spira_test {
     ASSERT_EQ(out1, true);
   }
 
-  TEST(stream_test, stream_scan_test) {
+  TEST(stream, scan_test) {
     spira::stream<int> stream0;
     spira::stream<int> stream1(stream0, 0, std::function<int(int,int)>([](int v1, int v2){return v1 + v2;}));
     int out0(0);
@@ -401,7 +446,7 @@ namespace spira_test {
     ASSERT_EQ(out1, 6);
   }
 
-  TEST(stream_test, stream_combine_test) {
+  TEST(stream, combine_test) {
     spira::stream<int> stream0;
     spira::stream<bool> stream1(stream0, std::function<bool(int)>([](int value){return ((value & 1) == 1);}));
     spira::stream<std::pair<int, bool> > stream2(stream0, stream1, spira::SAMPLED_BY::SECOND);

@@ -25,8 +25,6 @@
 #ifndef __SPIRA_STREAM_IMPL_HPP__
 #define __SPIRA_STREAM_IMPL_HPP__
 
-#include <iostream>
-
 namespace spira {
   template<typename T>
   struct stream<T>::stream_impl {
@@ -96,6 +94,18 @@ namespace spira {
   stream<T>::stream(stream<T>& stream1, stream<T>& stream2, DUPLICATES d_flag) : stream(d_flag) {
     stream1.impl->hook([=](T value){this->push(value);});
     stream2.impl->hook([=](T value){this->push(value);});
+  }
+
+  /* List Merge Constructor */
+  template<typename T>
+  stream<T>::stream(std::list<stream<T>* > streams, DUPLICATES d_flag) : stream(d_flag) {
+    typename std::list<stream<T>* >::iterator iter;
+    for(iter = streams.begin(); iter != streams.end(); ++iter) {
+      if((*iter) == NULL) {
+        throw std::exception(); // Throw exception of proper type
+      }
+      (*iter)->impl->hook([=](T value){this->push(value);});
+    }
   }
 
   /* Filter Constructor */

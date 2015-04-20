@@ -28,6 +28,7 @@
 #include <list>
 #include <functional>
 #include <memory>
+#include <exception>
 
 #include "config.h"
 
@@ -50,6 +51,9 @@ namespace spira {
 
     /* Merge Constructor */
     stream(stream<T>& stream1, stream<T>& stream2, DUPLICATES d_flag=DUPLICATES::TAKE);
+
+    /* List Merge Constructor */
+    stream(std::list<stream<T>* > streams, DUPLICATES d_flag=DUPLICATES::TAKE);
 
     /* Filter Constructor */
     stream(stream<T>& stream0, const std::function<bool(T)> filter, DUPLICATES d_flag=DUPLICATES::TAKE);

@@ -41,7 +41,8 @@ template<typename T>
 stream<T>::stream(stream<T>& stream1, stream<T>& stream2, DUPLICATES d_flag=DUPLICATES::TAKE);
 
 /* List Merge Constructor */
-stream(std::list<stream<T>* > streams, DUPLICATES d_flag=DUPLICATES::TAKE);
+template<typename T>
+stream<T>::stream(std::list<stream<T>* > streams, DUPLICATES d_flag=DUPLICATES::TAKE);
 
 /* Filter Constructor */
 template<typename T>

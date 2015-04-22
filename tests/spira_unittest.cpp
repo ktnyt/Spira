@@ -23,6 +23,8 @@
 ******************************************************************************/
 
 #include <memory>
+#include <thread>
+#include <chrono>
 
 #include "gtest/gtest.h"
 #include "spira.hpp"
@@ -245,7 +247,7 @@ namespace spira_test {
     int out0(0);
     int out1(0);
     int out2(0);
-    
+
     stream0.bind([&](int value){out0 = value;});
     stream1.bind([&](int value){out1 = value;});
     stream2.bind([&](int value){out2 = value;});
@@ -280,7 +282,7 @@ namespace spira_test {
     int out1(0);
     int out2(0);
     int out3(0);
-    
+
     stream0.bind([&](int value){out0 = value;});
     stream1.bind([&](int value){out1 = value;});
     stream2.bind([&](int value){out2 = value;});
@@ -468,5 +470,59 @@ namespace spira_test {
     ASSERT_EQ(out0, 2);
     ASSERT_EQ(out1, false);
     ASSERT_EQ(out2, (std::pair<int, bool>(out0, out1)));
+  }
+
+  TEST(timer, 10_test) {
+    spira::timer timer(10);
+    int out0(0);
+    timer.stop();
+    timer.bind([&](spira::TIME value){if(value != 0) out0++;});
+    timer.reset();
+    ASSERT_EQ(out0, 0);
+    timer.start();
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    ASSERT_EQ(out0, 10);
+  }
+
+  TEST(timer, 58_test) {
+    spira::timer timer(58);
+    int out0(0);
+
+    timer.bind([&](spira::TIME value){if(value != 0) out0++;});
+    timer.reset();
+    ASSERT_EQ(out0, 0);
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    ASSERT_EQ(out0, 58);
+  }
+
+  TEST(timer, 100_test) {
+    spira::timer timer(100);
+    int out0(0);
+
+    timer.stop();
+    timer.bind([&](spira::TIME value){if(value != 0) out0++;});
+    timer.reset();
+    ASSERT_EQ(out0, 0);
+    timer.start();
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    ASSERT_EQ(out0, 100);
+  }
+
+  TEST(timer, mirror_test) {
+    spira::timer timer(58);
+    spira::stream<spira::TIME> stream0(timer);
+    spira::TIME out0(0);
+    spira::TIME out1(0);
+
+    timer.stop();
+    timer.bind([&](spira::TIME value){out0 = value;});
+    stream0.bind([&](spira::TIME value){out1 = value;});
+    ASSERT_EQ(out0, 0);
+    timer.reset();
+    timer.start();
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    ASSERT_NE(out0, 0);
+    ASSERT_NE(out0, 1);
+    ASSERT_EQ(out0, out1);
   }
 }

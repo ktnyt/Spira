@@ -84,8 +84,50 @@ static void stream_merge_benchmark(benchmark::State& state) {
   stream2.bind([&](int value){out = value;});
 
   while(state.KeepRunning()) {
-    stream0.push(iter);
-    stream1.push(iter);
+    if(iter & 1) stream0.push(iter);
+    else stream1.push(iter);
+    iter++;
+  }
+}
+
+static void stream_merge10_benchmark(benchmark::State& state) {
+  spira::stream<int> stream0;
+  spira::stream<int> stream1;
+  spira::stream<int> stream2;
+  spira::stream<int> stream3;
+  spira::stream<int> stream4;
+  spira::stream<int> stream5;
+  spira::stream<int> stream6;
+  spira::stream<int> stream7;
+  spira::stream<int> stream8;
+  spira::stream<int> stream9;
+  int out(0);
+  int iter(0);
+
+  std::list<spira::stream<int>* > list;
+  list.push_back(&stream0);
+  list.push_back(&stream1);
+  list.push_back(&stream2);
+  list.push_back(&stream3);
+  list.push_back(&stream4);
+  list.push_back(&stream5);
+  list.push_back(&stream6);
+  list.push_back(&stream7);
+  list.push_back(&stream8);
+  list.push_back(&stream9);
+
+  spira::stream<int> streamA(list);
+
+  streamA.bind([&](int value){out = value;});
+
+  std::list<spira::stream<int>* >::iterator ptr = list.begin();
+
+  while(state.KeepRunning()) {
+    (*ptr)->push(0);
+    ptr++;
+    if(ptr == list.end()) {
+      ptr = list.begin();
+    }
     iter++;
   }
 }
@@ -167,6 +209,7 @@ BENCHMARK(stream_simple_benchmark);
 BENCHMARK(stream_mirror_benchmark);
 BENCHMARK(stream_mirror10_benchmark);
 BENCHMARK(stream_merge_benchmark);
+BENCHMARK(stream_merge10_benchmark);
 BENCHMARK(stream_filter_benchmark);
 BENCHMARK(stream_while_benchmark);
 BENCHMARK(stream_map_benchmark);

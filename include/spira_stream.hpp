@@ -78,12 +78,15 @@ namespace spira {
     /* Bind side-effects to stream */
     void bind(const std::function<void(T)> function);
 
+    /* Max number of items to take */
+    void take(int count);
+
   private:
     template<typename U>
     friend class stream;
 
     struct stream_impl;
-    std::unique_ptr<stream_impl> impl;
+    std::unique_ptr<stream_impl> impl_s;
   };
 }
 

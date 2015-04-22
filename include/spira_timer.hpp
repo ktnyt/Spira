@@ -1,5 +1,5 @@
 /******************************************************************************
-**  spira.hpp
+**  spira_generator.hpp
 **  SpiraFRP v1.0.0
 **
 **  Created by ktnyt on 2015/04/04
@@ -22,10 +22,30 @@
 **
 ******************************************************************************/
 
-#ifndef __SPIRA_HEADER_HPP__
-#define __SPIRA_HEADER_HPP__
+#ifndef __SPIRA_TIMER_HPP__
+#define __SPIRA_TIMER_HPP__
+
+#include <memory>
+#include <chrono>
+#include <thread>
 
 #include "spira_stream.hpp"
-#include "spira_timer.hpp"
+
+namespace spira {
+  typedef long double FPS;
+  typedef unsigned long long int FRAME;
+  typedef unsigned long long int TIME;
+  class timer : public stream<TIME> {
+  public:
+    timer(FPS fps=1000);
+    ~timer();
+    void start();
+    void stop();
+    void reset();
+  private:
+    struct timer_impl;
+    std::unique_ptr<timer_impl> impl_t;
+  };
+}
 
 #endif

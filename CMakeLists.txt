@@ -17,7 +17,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 ################################
 # Normal Libraries & Executables
 ################################
-add_executable(spira src/main.cpp)
+add_library(SPIRA_TIMER ./src/spira_timer.cpp)
 
 ################################
 # Benchmarking
@@ -26,7 +26,6 @@ add_executable(spira src/main.cpp)
 if (benchmark)
   add_subdirectory(lib/benchmark-master)
 
-
   include_directories(${benchmark_SOURCE_DIR}/include ${benchmark_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/include)
 
   ##############
@@ -34,6 +33,7 @@ if (benchmark)
   ##############
 
   add_executable(runBenchmarks tests/spira_benchmark.cpp)
+  target_link_libraries(runBenchmarks SPIRA_TIMER)
 
   target_link_libraries(runBenchmarks benchmark)
 endif()
@@ -55,6 +55,7 @@ if (test)
   # Unit Tests
   ##############
   add_executable(runUnitTests tests/spira_unittest.cpp)
+  target_link_libraries(runUnitTests SPIRA_TIMER)
 
   # Standard linking to gtest stuff.
   target_link_libraries(runUnitTests gtest gtest_main)

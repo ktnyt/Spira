@@ -1,74 +1,76 @@
-# SpiraFRP version 1
-Yet another C++ library for functional reactive style programming.
+# SpiraFRP version 2
+Yet another C++ library for functional reactive style programming inspired by [Bacon.js](https://baconjs.github.io/).
 
-C++11 is required for compiling.
+Currently, C++11 is required for compiling.
 
-Example usage
--------------
-Include the header to use SpiraFRP in your project.
+Concept & Quick usage
+---------------------
+Include the header to use SpiraFRP in your project.  
 No linking required (for now).
 
 ```c++
 #include "spira.hpp"
 ```
 
-Streams are "constructed" via constructors.
+The two core concept of SpiraFRP are `source`s and `stream`s. A `source` is an object which only handles input side-effects and a `stream`, drawn from a source, handles functional style data manipulation and output side-effects.
 
 ```c++
-spira::stream<int> stream0;
-spira::stream<int> stream1(stream0); // Mirror stream0
+spira::source<int> source0;
+spira::stream<int> stream0 = source0.draw();
 ```
 
-Side-effects may be performed by "bind"ing to the stream.
+Side-effects are handled by "bind"ing to the `stream`.
 
 ```c++
 std::function<void(int)> some_side_effect([](int value){std::cout << value << std::endl;});
-stream1.bind(some_side_effect); // Bind to stream1
+stream0.bind(some_side_effect); // Bind to stream1
 ```
 
-Bound functions will be called when values are "push"ed.
+Bound functions will be called when values are "push"ed to the `source`.
 
 ```c++
-stream0.push(0);
-stream0.push(1);
+source0.push(0);
+source0.push(42);
 ```
 
-There are many constructors to perform various FRP like tasks.
+Data Manipulation
+-----------------
+The following is a table of available data manipulation operations on a `stream<T>` type, its arguments, and a simple explanation.
+
+|Method |Argument                     |Function                               |
+|:------|:----------------------------|:--------------------------------------|
+|unique |None                         |Notifies only on value changes.        |
+|mirror |None                         |Bypasses values from the parent.       |
+|merge  |stream<T>&                   |Merges two streams into one.           |
+|filter |std::function<bool(T)>       |Filters stream with given function.    |
+|whilst |stream<bool>&                |Notifies while given stream is true.   |
+|scan   |T seed, std::function<T(T,T)>|Accumulates values with given function.|
+|map    |std::function<U(T)>          |Maps values with given function.       |
+|combine|stream<U>&, SAMPLED_BY       |Combines two streams into a pair.      |
+
+These methods can be chained as follows:
 
 ```c++
-/* Merge Constructor */
-template<typename T>
-stream<T>::stream(stream<T>& stream1, stream<T>& stream2, DUPLICATES d_flag=DUPLICATES::TAKE);
-
-/* List Merge Constructor */
-template<typename T>
-stream<T>::stream(std::list<stream<T>* > streams, DUPLICATES d_flag=DUPLICATES::TAKE);
-
-/* Filter Constructor */
-template<typename T>
-stream<T>::stream(stream<T>& stream0, const std::function<bool(T)> filter, DUPLICATES d_flag=DUPLICATES::TAKE);
-
-/* While Constructor */
-template<typename T>
-stream<T>::stream(stream<T>& stream0, stream<bool>& stream1, TAKE_WHILE t_flag=TAKE_WHILE::TRUE, DUPLICATES d_flag=DUPLICATES::TAKE);
-
-/* Map Constructor */
-template<typename T>
-template<typename U>
-stream<T>::stream(stream<U>& stream0, const std::function<T(U)> map, DUPLICATES d_flag=DUPLICATES::TAKE);
-
-/* Scan Constructor */
-template<typename T>
-stream<T>::stream(stream<T>& stream0, T seed, const std::function<T(T,T)> scan, DUPLICATES d_flag=DUPLICATES::TAKE);
-
-/* Combine Constructor */
-template<typename T>
-template<typename T1, typename T2>
-stream<std::pair<T1, T2> >::stream(stream<T1>& stream1, stream<T2>& stream2, SAMPLED_BY s_flag=SAMPLED_BY::BOTH, DUPLICATES d_flag=DUPLICATES::TAKE);
+spira::stream<int> stream1 = stream0.mirror().unique();
 ```
 
-Future Work
------------
-- Switch `std::make_unique` to `new std::unique_ptr` in C++11/C++0x
-- Implement a pointer wrapper for `spira::stream`
-- Create `stream` and `property` like BaconJS?
+Operators
+---------
+Some operators are overloaded and can be used on primitive typed `stream`s.
+
+- +
+- -
+- *
+- /
+- %
+
+```c++
+spira::stream<int> stream2 = stream0 + stream1;
+```
+
+Future Work (by priority)
+-------------------------
+- `std::list` source generator
+- `timer` source generator
+- Documentation
+- boost support for pre-C++11 compilers

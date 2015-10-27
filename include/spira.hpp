@@ -1,9 +1,9 @@
 /******************************************************************************
  *
- * stream.cpp
+ * spira.hpp
  *
  * @author Copyright (C) 2015 Kotone Itaya
- * @version 1.0.0
+ * @version 2.0.0
  * @created  2015/10/15 Kotone Itaya -- Created!
  * @@
  *
@@ -26,21 +26,10 @@
  *
  *****************************************************************************/
 
+#ifndef __SPIRA_SPIRA_HPP__
+#define __SPIRA_SPIRA_HPP__
+
 #include "stream.hpp"
+#include "source.hpp"
 
-namespace spira {
-  template<typename T>
-  void swap(stream<T>& a, stream<T>& b) {
-    std::swap(a.value, b.value);
-    std::swap(a.bind_list, b.bind_list);
-    std::swap(a.glue_list, b.glue_list);
-    std::swap(a.hook_list, b.hook_list);
-  }
-
-  template<typename T>
-  stream<T>* mirror(stream<T>* origin) {
-    stream<T>* ptr = new stream<T>();
-    origin->hook([=](T value){ptr->push(value);});
-    return ptr;
-  }
-}
+#endif

@@ -1,9 +1,9 @@
 /******************************************************************************
  *
- * basin.cpp
+ * source.hpp
  *
  * @author Copyright (C) 2015 Kotone Itaya
- * @version 1.0.0
+ * @version 2.0.0
  * @created  2015/10/15 Kotone Itaya -- Created!
  * @@
  *
@@ -26,19 +26,21 @@
  *
  *****************************************************************************/
 
-#include "basin.hpp"
+#ifndef __SPIRA_SOURCE_HPP__
+#define __SPIRA_SOURCE_HPP__
+
+#include <memory>
+#include "stream.hpp"
 
 namespace spira {
-  basin::basin() {}
-
-  basin::basin(const basin& other) {}
-
-  basin& basin::operator =(basin& other) {
-    swap(*this, other);
-    return *this;
-  }
-
-  void swap(basin& a, basin& b) {
-    /* std::swap(a.foo, b.foo) */
-  }
+  template<typename T>
+  class source : private stream<T> {
+  public:
+    stream<T> draw();
+    void dump(T value);
+  };
 }
+
+#include "source_impl.hpp"
+
+#endif

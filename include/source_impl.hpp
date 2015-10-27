@@ -1,9 +1,9 @@
 /******************************************************************************
  *
- * basin.hpp
+ * source_impl.hpp
  *
  * @author Copyright (C) 2015 Kotone Itaya
- * @version 1.0.0
+ * @version 2.0.0
  * @created  2015/10/15 Kotone Itaya -- Created!
  * @@
  *
@@ -26,30 +26,21 @@
  *
  *****************************************************************************/
 
-#ifndef __SPIRA_BASIN_HPP__
-#define __SPIRA_BASIN_HPP__
+#ifndef __SPIRA_SOURCE_IMPL_HPP__
+#define __SPIRA_SOURCE_IMPL_HPP__
 
-#include <list>
 #include <memory>
-#include "stream.hpp"
-#include <iostream>
 
 namespace spira {
   template<typename T>
-  class basin : private stream<T> {
-  public:
-    basin() {}
+  stream<T> source<T>::draw() {
+    return this->mirror();
+  }
 
-    basin(T init) : stream<T>(init) {}
-
-    stream<T>* draw() {
-      return this->mirror();
-    }
-
-    void dump(T value) {
-      this->push(value);
-    }
-  };
+  template<typename T>
+  void source<T>::dump(T value) {
+    this->push(value);
+  }
 }
 
 #endif

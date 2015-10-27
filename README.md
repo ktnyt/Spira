@@ -26,11 +26,11 @@ std::function<void(int)> some_side_effect([](int value){std::cout << value << st
 stream0.bind(some_side_effect); // Bind to stream1
 ```
 
-Bound functions will be called when values are "push"ed to the `source`.
+Bound functions will be called when values are "dump"ed to the `source`.
 
 ```c++
-source0.push(0);
-source0.push(42);
+source0.dump(0);
+source0.dump(42);
 ```
 
 Data Manipulation

@@ -75,40 +75,87 @@ namespace spira {
     struct impl; std::shared_ptr<impl> pimpl;
   };
 
+  // Operator overload abstraction
   template<typename T>
   stream<T> operate(stream<T> a, stream<T> b, std::function<T(T, T)> operation);
   template<typename T>
-  stream<T> operator ==(stream<T> a, stream<T> b);
+  stream<T> operate(stream<T> a, T b, std::function<T(T, T)> operation);
   template<typename T>
-  stream<T> operator !=(stream<T> a, stream<T> b);
-  template<typename T>
-  stream<T> operator <(stream<T> a, stream<T> b);
-  template<typename T>
-  stream<T> operator >(stream<T> a, stream<T> b);
-  template<typename T>
-  stream<T> operator <=(stream<T> a, stream<T> b);
-  template<typename T>
-  stream<T> operator >=(stream<T> a, stream<T> b);
-  template<typename T>
-  stream<T> operator +(stream<T> a, stream<T> b);
-  template<typename T>
-  stream<T> operator -(stream<T> a, stream<T> b);
-  template<typename T>
-  stream<T> operator *(stream<T> a, stream<T> b);
-  template<typename T>
-  stream<T> operator /(stream<T> a, stream<T> b);
-  template<typename T>
-  stream<T> operator %(stream<T> a, stream<T> b);
-  template<typename T>
-  stream<T> operator &(stream<T> a, stream<T> b);
-  template<typename T>
-  stream<T> operator ^(stream<T> a, stream<T> b);
-  template<typename T>
-  stream<T> operator |(stream<T> a, stream<T> b);
-  template<typename T>
-  stream<T> operator &&(stream<T> a, stream<T> b);
-  template<typename T>
-  stream<T> operator ||(stream<T> a, stream<T> b);
+  stream<T> operate(T a, stream<T> b, std::function<T(T, T)> operation);
+
+  // Comparison operator overloads
+  template<typename T> stream<T> operator ==(stream<T> a, stream<T> b);
+  template<typename T> stream<T> operator !=(stream<T> a, stream<T> b);
+  template<typename T> stream<T> operator < (stream<T> a, stream<T> b);
+  template<typename T> stream<T> operator > (stream<T> a, stream<T> b);
+  template<typename T> stream<T> operator <=(stream<T> a, stream<T> b);
+  template<typename T> stream<T> operator >=(stream<T> a, stream<T> b);
+
+  template<typename T> stream<T> operator ==(stream<T> a, T b);
+  template<typename T> stream<T> operator !=(stream<T> a, T b);
+  template<typename T> stream<T> operator < (stream<T> a, T b);
+  template<typename T> stream<T> operator > (stream<T> a, T b);
+  template<typename T> stream<T> operator <=(stream<T> a, T b);
+  template<typename T> stream<T> operator >=(stream<T> a, T b);
+
+  template<typename T> stream<T> operator ==(T a, stream<T> b);
+  template<typename T> stream<T> operator !=(T a, stream<T> b);
+  template<typename T> stream<T> operator < (T a, stream<T> b);
+  template<typename T> stream<T> operator > (T a, stream<T> b);
+  template<typename T> stream<T> operator <=(T a, stream<T> b);
+  template<typename T> stream<T> operator >=(T a, stream<T> b);
+
+  // Arithmetic operator overloads
+  template<typename T> stream<T> operator +(stream<T> a, stream<T> b);
+  template<typename T> stream<T> operator -(stream<T> a, stream<T> b);
+  template<typename T> stream<T> operator *(stream<T> a, stream<T> b);
+  template<typename T> stream<T> operator /(stream<T> a, stream<T> b);
+  template<typename T> stream<T> operator %(stream<T> a, stream<T> b);
+
+  template<typename T> stream<T> operator +(stream<T> a, T b);
+  template<typename T> stream<T> operator -(stream<T> a, T b);
+  template<typename T> stream<T> operator *(stream<T> a, T b);
+  template<typename T> stream<T> operator /(stream<T> a, T b);
+  template<typename T> stream<T> operator %(stream<T> a, T b);
+
+  template<typename T> stream<T> operator +(T a, stream<T> b);
+  template<typename T> stream<T> operator -(T a, stream<T> b);
+  template<typename T> stream<T> operator *(T a, stream<T> b);
+  template<typename T> stream<T> operator /(T a, stream<T> b);
+  template<typename T> stream<T> operator %(T a, stream<T> b);
+
+  // Bitwise operator overloads
+  template<typename T> stream<T> operator ~ (stream<T> a);
+
+  template<typename T> stream<T> operator & (stream<T> a, stream<T> b);
+  template<typename T> stream<T> operator ^ (stream<T> a, stream<T> b);
+  template<typename T> stream<T> operator | (stream<T> a, stream<T> b);
+  template<typename T> stream<T> operator <<(stream<T> a, stream<T> b);
+  template<typename T> stream<T> operator >>(stream<T> a, stream<T> b);
+
+  template<typename T> stream<T> operator & (stream<T> a, T b);
+  template<typename T> stream<T> operator ^ (stream<T> a, T b);
+  template<typename T> stream<T> operator | (stream<T> a, T b);
+  template<typename T> stream<T> operator <<(stream<T> a, T b);
+  template<typename T> stream<T> operator >>(stream<T> a, T b);
+
+  template<typename T> stream<T> operator & (T a, stream<T> b);
+  template<typename T> stream<T> operator ^ (T a, stream<T> b);
+  template<typename T> stream<T> operator | (T a, stream<T> b);
+  template<typename T> stream<T> operator <<(T a, stream<T> b);
+  template<typename T> stream<T> operator >>(T a, stream<T> b);
+
+  // Logical operator overloads
+  template<typename T> stream<T> operator !(stream<T> a);
+
+  template<typename T> stream<T> operator &&(stream<T> a, stream<T> b);
+  template<typename T> stream<T> operator ||(stream<T> a, stream<T> b);
+
+  template<typename T> stream<T> operator &&(stream<T> a, T b);
+  template<typename T> stream<T> operator ||(stream<T> a, T b);
+
+  template<typename T> stream<T> operator &&(T a, stream<T> b);
+  template<typename T> stream<T> operator ||(T a, stream<T> b);
 }
 
 #include "stream_impl.hpp"

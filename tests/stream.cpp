@@ -43,6 +43,23 @@ namespace spira {
       ASSERT_EQ(out0, 42);
     }
 
+    TEST(stream, chain) {
+      source<int> source0;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = stream0.mirror().mirror();
+      int out0(0);
+      int out1(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream0.bind([&out1](int value){out1 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(42);
+      ASSERT_EQ(out0, 42);
+      ASSERT_EQ(out1, 42);
+    }
+
     TEST(stream, unique) {
       source<int> source0;
       stream<int> stream0 = source0.draw();
@@ -250,6 +267,9 @@ namespace spira {
       stream1.bind([&out1](int value){out1 = value;});
       stream2.bind([&out2](int value){out2 = value;});
 
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      ASSERT_EQ(out2, 0);
       source0.dump(0);
       source1.dump(0);
       ASSERT_EQ(out0, 0);
@@ -283,6 +303,9 @@ namespace spira {
       stream1.bind([&out1](int value){out1 = value;});
       stream2.bind([&out2](int value){out2 = value;});
 
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      ASSERT_EQ(out2, 0);
       source0.dump(0);
       source1.dump(0);
       ASSERT_EQ(out0, 0);
@@ -316,6 +339,9 @@ namespace spira {
       stream1.bind([&out1](int value){out1 = value;});
       stream2.bind([&out2](int value){out2 = value;});
 
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      ASSERT_EQ(out2, 0);
       source0.dump(0);
       source1.dump(0);
       ASSERT_EQ(out0, 0);
@@ -349,6 +375,9 @@ namespace spira {
       stream1.bind([&out1](int value){out1 = value;});
       stream2.bind([&out2](int value){out2 = value;});
 
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      ASSERT_EQ(out2, 0);
       source0.dump(0);
       source1.dump(0);
       ASSERT_EQ(out0, 0);
@@ -382,6 +411,9 @@ namespace spira {
       stream1.bind([&out1](int value){out1 = value;});
       stream2.bind([&out2](int value){out2 = value;});
 
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      ASSERT_EQ(out2, 0);
       source0.dump(0);
       source1.dump(0);
       ASSERT_EQ(out0, 0);
@@ -415,6 +447,9 @@ namespace spira {
       stream1.bind([&out1](int value){out1 = value;});
       stream2.bind([&out2](int value){out2 = value;});
 
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      ASSERT_EQ(out2, 0);
       source0.dump(0);
       source1.dump(0);
       ASSERT_EQ(out0, 0);
@@ -432,6 +467,270 @@ namespace spira {
       ASSERT_EQ(out0, 0);
       ASSERT_EQ(out1, 42);
       ASSERT_EQ(out2, 0);
+    }
+
+    TEST(stream, operator_eq_lhs) {
+      source<int> source0;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = stream0 == 42;
+      int out0(0);
+      int out1(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(42);
+      ASSERT_EQ(out0, 42);
+      ASSERT_EQ(out1, 1);
+    }
+
+    TEST(stream, operator_neq_lhs) {
+      source<int> source0;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = stream0 != 42;
+      int out0(0);
+      int out1(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 1);
+      source0.dump(42);
+      ASSERT_EQ(out0, 42);
+      ASSERT_EQ(out1, 0);
+    }
+
+    TEST(stream, operator_lt_lhs) {
+      source<int> source0;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = stream0 < 0;
+      int out0(0);
+      int out1(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(42);
+      ASSERT_EQ(out0, 42);
+      ASSERT_EQ(out1, 0);
+      source0.dump(-42);
+      ASSERT_EQ(out0, -42);
+      ASSERT_EQ(out1, 1);
+    }
+
+    TEST(stream, operator_gt_lhs) {
+      source<int> source0;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = stream0 > 0;
+      int out0(0);
+      int out1(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(42);
+      ASSERT_EQ(out0, 42);
+      ASSERT_EQ(out1, 1);
+      source0.dump(-42);
+      ASSERT_EQ(out0, -42);
+      ASSERT_EQ(out1, 0);
+    }
+
+    TEST(stream, operator_lteq_lhs) {
+      source<int> source0;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = stream0 <= 0;
+      int out0(0);
+      int out1(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 1);
+      source0.dump(42);
+      ASSERT_EQ(out0, 42);
+      ASSERT_EQ(out1, 0);
+      source0.dump(-42);
+      ASSERT_EQ(out0, -42);
+      ASSERT_EQ(out1, 1);
+    }
+
+    TEST(stream, operator_gteq_lhs) {
+      source<int> source0;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = stream0 >= 0;
+      int out0(0);
+      int out1(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 1);
+      source0.dump(42);
+      ASSERT_EQ(out0, 42);
+      ASSERT_EQ(out1, 1);
+      source0.dump(-42);
+      ASSERT_EQ(out0, -42);
+      ASSERT_EQ(out1, 0);
+    }
+
+    TEST(stream, operator_eq_rhs) {
+      source<int> source0;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = 42 == stream0;
+      int out0(0);
+      int out1(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(42);
+      ASSERT_EQ(out0, 42);
+      ASSERT_EQ(out1, 1);
+    }
+
+    TEST(stream, operator_neq_rhs) {
+      source<int> source0;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = 42 != stream0;
+      int out0(0);
+      int out1(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 1);
+      source0.dump(42);
+      ASSERT_EQ(out0, 42);
+      ASSERT_EQ(out1, 0);
+    }
+
+    TEST(stream, operator_lt_rhs) {
+      source<int> source0;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = 0 < stream0;
+      int out0(0);
+      int out1(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(42);
+      ASSERT_EQ(out0, 42);
+      ASSERT_EQ(out1, 1);
+      source0.dump(-42);
+      ASSERT_EQ(out0, -42);
+      ASSERT_EQ(out1, 0);
+    }
+
+    TEST(stream, operator_gt_rhs) {
+      source<int> source0;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = 0 > stream0;
+      int out0(0);
+      int out1(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(42);
+      ASSERT_EQ(out0, 42);
+      ASSERT_EQ(out1, 0);
+      source0.dump(-42);
+      ASSERT_EQ(out0, -42);
+      ASSERT_EQ(out1, 1);
+    }
+
+    TEST(stream, operator_lteq_rhs) {
+      source<int> source0;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = 0 <= stream0;
+      int out0(0);
+      int out1(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 1);
+      source0.dump(42);
+      ASSERT_EQ(out0, 42);
+      ASSERT_EQ(out1, 1);
+      source0.dump(-42);
+      ASSERT_EQ(out0, -42);
+      ASSERT_EQ(out1, 0);
+    }
+
+    TEST(stream, operator_gteq_rhs) {
+      source<int> source0;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = 0 >= stream0;
+      int out0(0);
+      int out1(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 1);
+      source0.dump(42);
+      ASSERT_EQ(out0, 42);
+      ASSERT_EQ(out1, 0);
+      source0.dump(-42);
+      ASSERT_EQ(out0, -42);
+      ASSERT_EQ(out1, 1);
     }
 
     TEST(stream, operator_plus) {
@@ -569,6 +868,747 @@ namespace spira {
       ASSERT_EQ(out0, 42);
       ASSERT_EQ(out1, 42);
       ASSERT_EQ(out2, 0);
+    }
+
+    TEST(stream, operator_plus_rhs) {
+      source<int> source0;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = stream0 + 42;
+      int out0(0);
+      int out1(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(42);
+      ASSERT_EQ(out0, 42);
+      ASSERT_EQ(out1, 84);
+    }
+
+    TEST(stream, operator_minus_rhs) {
+      source<int> source0;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = stream0 - 42;
+      int out0(0);
+      int out1(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(42);
+      ASSERT_EQ(out0, 42);
+      ASSERT_EQ(out1, 0);
+    }
+
+    TEST(stream, operator_star_rhs) {
+      source<int> source0;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = stream0 * 42;
+      int out0(0);
+      int out1(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(42);
+      ASSERT_EQ(out0, 42);
+      ASSERT_EQ(out1, 1764);
+    }
+
+    TEST(stream, operator_slash_rhs) {
+      source<int> source0;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = stream0 / 42;
+      int out0(0);
+      int out1(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(42);
+      ASSERT_EQ(out0, 42);
+      ASSERT_EQ(out1, 1);
+    }
+
+    TEST(stream, operator_percent_rhs) {
+      source<int> source0;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = stream0 % 42;
+      int out0(0);
+      int out1(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(42);
+      ASSERT_EQ(out0, 42);
+      ASSERT_EQ(out1, 0);
+      source0.dump(50);
+      ASSERT_EQ(out0, 50);
+      ASSERT_EQ(out1, 8);
+    }
+
+    TEST(stream, operator_plus_lhs) {
+      source<int> source0;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = 42 + stream0;
+      int out0(0);
+      int out1(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(42);
+      ASSERT_EQ(out0, 42);
+      ASSERT_EQ(out1, 84);
+    }
+
+    TEST(stream, operator_minus_lhs) {
+      source<int> source0;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = 42 - stream0;
+      int out0(0);
+      int out1(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(42);
+      ASSERT_EQ(out0, 42);
+      ASSERT_EQ(out1, 0);
+    }
+
+    TEST(stream, operator_star_lhs) {
+      source<int> source0;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = 42 * stream0;
+      int out0(0);
+      int out1(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(42);
+      ASSERT_EQ(out0, 42);
+      ASSERT_EQ(out1, 1764);
+    }
+
+    TEST(stream, operator_slash_lhs) {
+      source<int> source0;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = 42 / stream0;
+      int out0(0);
+      int out1(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(42);
+      ASSERT_EQ(out0, 42);
+      ASSERT_EQ(out1, 1);
+    }
+
+    TEST(stream, operator_percent_lhs) {
+      source<int> source0;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = 42 % stream0;
+      int out0(0);
+      int out1(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(42);
+      ASSERT_EQ(out0, 42);
+      ASSERT_EQ(out1, 0);
+      source0.dump(10);
+      ASSERT_EQ(out0, 10);
+      ASSERT_EQ(out1, 2);
+    }
+
+    TEST(stream, operator_bitnot) {
+      source<int> source0;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = ~stream0;
+      int out0(0);
+      int out1(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, ~0);
+      source0.dump(1);
+      ASSERT_EQ(out0, 1);
+      ASSERT_EQ(out1, ~0 ^ 1);
+    }
+
+    TEST(stream, operator_bitand) {
+      source<int> source0;
+      source<int> source1;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = source1.draw();
+      stream<int> stream2 = stream0 & stream1;
+      int out0(0);
+      int out1(0);
+      int out2(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+      stream2.bind([&out2](int value){out2 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      ASSERT_EQ(out2, 0);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      ASSERT_EQ(out2, 0);
+      source0.dump(1);
+      ASSERT_EQ(out0, 1);
+      ASSERT_EQ(out1, 0);
+      ASSERT_EQ(out2, 0);
+      source1.dump(1);
+      ASSERT_EQ(out0, 1);
+      ASSERT_EQ(out1, 1);
+      ASSERT_EQ(out2, 1);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 1);
+      ASSERT_EQ(out2, 0);
+    }
+
+    TEST(stream, operator_bitxor) {
+      source<int> source0;
+      source<int> source1;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = source1.draw();
+      stream<int> stream2 = stream0 ^ stream1;
+      int out0(0);
+      int out1(0);
+      int out2(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+      stream2.bind([&out2](int value){out2 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      ASSERT_EQ(out2, 0);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      ASSERT_EQ(out2, 0);
+      source0.dump(1);
+      ASSERT_EQ(out0, 1);
+      ASSERT_EQ(out1, 0);
+      ASSERT_EQ(out2, 1);
+      source1.dump(1);
+      ASSERT_EQ(out0, 1);
+      ASSERT_EQ(out1, 1);
+      ASSERT_EQ(out2, 0);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 1);
+      ASSERT_EQ(out2, 1);
+    }
+
+    TEST(stream, operator_bitor) {
+      source<int> source0;
+      source<int> source1;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = source1.draw();
+      stream<int> stream2 = stream0 | stream1;
+      int out0(0);
+      int out1(0);
+      int out2(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+      stream2.bind([&out2](int value){out2 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      ASSERT_EQ(out2, 0);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      ASSERT_EQ(out2, 0);
+      source0.dump(1);
+      ASSERT_EQ(out0, 1);
+      ASSERT_EQ(out1, 0);
+      ASSERT_EQ(out2, 1);
+      source1.dump(1);
+      ASSERT_EQ(out0, 1);
+      ASSERT_EQ(out1, 1);
+      ASSERT_EQ(out2, 1);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 1);
+      ASSERT_EQ(out2, 1);
+    }
+
+    TEST(stream, operator_bitshl) {
+      source<int> source0;
+      source<int> source1;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = source1.draw();
+      stream<int> stream2 = stream0 << stream1;
+      int out0(0);
+      int out1(0);
+      int out2(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+      stream2.bind([&out2](int value){out2 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      ASSERT_EQ(out2, 0);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      ASSERT_EQ(out2, 0);
+      source0.dump(1);
+      ASSERT_EQ(out0, 1);
+      ASSERT_EQ(out1, 0);
+      ASSERT_EQ(out2, 1);
+      source1.dump(1);
+      ASSERT_EQ(out0, 1);
+      ASSERT_EQ(out1, 1);
+      ASSERT_EQ(out2, 2);
+      source1.dump(2);
+      ASSERT_EQ(out0, 1);
+      ASSERT_EQ(out1, 2);
+      ASSERT_EQ(out2, 4);
+    }
+
+    TEST(stream, operator_bitshr) {
+      source<int> source0;
+      source<int> source1;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = source1.draw();
+      stream<int> stream2 = stream0 >> stream1;
+      int out0(0);
+      int out1(0);
+      int out2(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+      stream2.bind([&out2](int value){out2 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      ASSERT_EQ(out2, 0);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      ASSERT_EQ(out2, 0);
+      source0.dump(4);
+      ASSERT_EQ(out0, 4);
+      ASSERT_EQ(out1, 0);
+      ASSERT_EQ(out2, 4);
+      source1.dump(1);
+      ASSERT_EQ(out0, 4);
+      ASSERT_EQ(out1, 1);
+      ASSERT_EQ(out2, 2);
+      source1.dump(2);
+      ASSERT_EQ(out0, 4);
+      ASSERT_EQ(out1, 2);
+      ASSERT_EQ(out2, 1);
+    }
+
+    TEST(stream, operator_bitand_rhs) {
+      source<int> source0;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = stream0 & 1;
+      int out0(0);
+      int out1(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(1);
+      ASSERT_EQ(out0, 1);
+      ASSERT_EQ(out1, 1);
+    }
+
+    TEST(stream, operator_bitxor_rhs) {
+      source<int> source0;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = stream0 ^ 1;
+      int out0(0);
+      int out1(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 1);
+      source0.dump(1);
+      ASSERT_EQ(out0, 1);
+      ASSERT_EQ(out1, 0);
+    }
+
+    TEST(stream, operator_bitor_rhs) {
+      source<int> source0;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = stream0 | 0;
+      int out0(0);
+      int out1(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(1);
+      ASSERT_EQ(out0, 1);
+      ASSERT_EQ(out1, 1);
+    }
+
+    TEST(stream, operator_bitshl_rhs) {
+      source<int> source0;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = stream0 << 1;
+      int out0(0);
+      int out1(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(1);
+      ASSERT_EQ(out0, 1);
+      ASSERT_EQ(out1, 2);
+    }
+
+    TEST(stream, operator_bitshr_rhs) {
+      source<int> source0;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = stream0 >> 1;
+      int out0(0);
+      int out1(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(1);
+      ASSERT_EQ(out0, 1);
+      ASSERT_EQ(out1, 0);
+    }
+
+    TEST(stream, operator_bitand_lhs) {
+      source<int> source0;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = 1 & stream0;
+      int out0(0);
+      int out1(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(1);
+      ASSERT_EQ(out0, 1);
+      ASSERT_EQ(out1, 1);
+    }
+
+    TEST(stream, operator_bitxor_lhs) {
+      source<int> source0;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = 1 ^ stream0;
+      int out0(0);
+      int out1(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 1);
+      source0.dump(1);
+      ASSERT_EQ(out0, 1);
+      ASSERT_EQ(out1, 0);
+    }
+
+    TEST(stream, operator_bitor_lhs) {
+      source<int> source0;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = 0 | stream0;
+      int out0(0);
+      int out1(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(1);
+      ASSERT_EQ(out0, 1);
+      ASSERT_EQ(out1, 1);
+    }
+
+    TEST(stream, operator_bitshl_lhs) {
+      source<int> source0;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = 1 << stream0;
+      int out0(0);
+      int out1(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 1);
+      source0.dump(1);
+      ASSERT_EQ(out0, 1);
+      ASSERT_EQ(out1, 2);
+    }
+
+    TEST(stream, operator_bitshr_lhs) {
+      source<int> source0;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = 1 >> stream0;
+      int out0(0);
+      int out1(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 1);
+      source0.dump(1);
+      ASSERT_EQ(out0, 1);
+      ASSERT_EQ(out1, 0);
+    }
+
+    TEST(stream, operator_not) {
+      source<int> source0;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = !stream0;
+      int out0(0);
+      int out1(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 1);
+      source0.dump(1);
+      ASSERT_EQ(out0, 1);
+      ASSERT_EQ(out1, 0);
+    }
+
+    TEST(stream, operator_and) {
+      source<int> source0;
+      source<int> source1;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = source1.draw();
+      stream<int> stream2 = stream0 && stream1;
+      int out0(0);
+      int out1(0);
+      int out2(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+      stream2.bind([&out2](int value){out2 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      ASSERT_EQ(out2, 0);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      ASSERT_EQ(out2, 0);
+      source0.dump(1);
+      ASSERT_EQ(out0, 1);
+      ASSERT_EQ(out1, 0);
+      ASSERT_EQ(out2, 0);
+      source1.dump(1);
+      ASSERT_EQ(out0, 1);
+      ASSERT_EQ(out1, 1);
+      ASSERT_EQ(out2, 1);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 1);
+      ASSERT_EQ(out2, 0);
+    }
+
+    TEST(stream, operator_or) {
+      source<int> source0;
+      source<int> source1;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = source1.draw();
+      stream<int> stream2 = stream0 || stream1;
+      int out0(0);
+      int out1(0);
+      int out2(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+      stream2.bind([&out2](int value){out2 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      ASSERT_EQ(out2, 0);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      ASSERT_EQ(out2, 0);
+      source0.dump(1);
+      ASSERT_EQ(out0, 1);
+      ASSERT_EQ(out1, 0);
+      ASSERT_EQ(out2, 1);
+      source1.dump(1);
+      ASSERT_EQ(out0, 1);
+      ASSERT_EQ(out1, 1);
+      ASSERT_EQ(out2, 1);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 1);
+      ASSERT_EQ(out2, 1);
+    }
+
+    TEST(stream, operator_and_rhs) {
+      source<int> source0;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = stream0 && 1;
+      int out0(0);
+      int out1(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(1);
+      ASSERT_EQ(out0, 1);
+      ASSERT_EQ(out1, 1);
+    }
+
+    TEST(stream, operator_or_rhs) {
+      source<int> source0;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = stream0 || 0;
+      int out0(0);
+      int out1(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(1);
+      ASSERT_EQ(out0, 1);
+      ASSERT_EQ(out1, 1);
+    }
+
+    TEST(stream, operator_and_lhs) {
+      source<int> source0;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = 1 && stream0;
+      int out0(0);
+      int out1(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(1);
+      ASSERT_EQ(out0, 1);
+      ASSERT_EQ(out1, 1);
+    }
+
+    TEST(stream, operator_or_lhs) {
+      source<int> source0;
+      stream<int> stream0 = source0.draw();
+      stream<int> stream1 = 0 || stream0;
+      int out0(0);
+      int out1(0);
+
+      stream0.bind([&out0](int value){out0 = value;});
+      stream1.bind([&out1](int value){out1 = value;});
+
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(0);
+      ASSERT_EQ(out0, 0);
+      ASSERT_EQ(out1, 0);
+      source0.dump(1);
+      ASSERT_EQ(out0, 1);
+      ASSERT_EQ(out1, 1);
     }
   }
 }

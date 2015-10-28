@@ -130,94 +130,6 @@ namespace spira {
   }
 
   template<typename T>
-  stream<T> operate(stream<T> a, stream<T> b, std::function<T(T, T)> operation) {
-    return a.combine(b, SAMPLED_BY::BOTH)
-      .map(std::function<T(std::pair<T, T>)>([operation](std::pair<T, T> value){
-            return operation(value.first, value.second);
-          }));
-  }
-
-  template<typename T>
-  stream<T> operator ==(stream<T> a, stream<T> b) {
-    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a == b;}));
-  }
-
-  template<typename T>
-  stream<T> operator !=(stream<T> a, stream<T> b) {
-    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a != b;}));
-  }
-
-  template<typename T>
-  stream<T> operator <(stream<T> a, stream<T> b) {
-    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a < b;}));
-  }
-
-  template<typename T>
-  stream<T> operator >(stream<T> a, stream<T> b) {
-    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a > b;}));
-  }
-
-  template<typename T>
-  stream<T> operator <=(stream<T> a, stream<T> b) {
-    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a <= b;}));
-  }
-
-  template<typename T>
-  stream<T> operator >=(stream<T> a, stream<T> b) {
-    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a >= b;}));
-  }
-
-  template<typename T>
-  stream<T> operator +(stream<T> a, stream<T> b) {
-    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a + b;}));
-  }
-
-  template<typename T>
-  stream<T> operator -(stream<T> a, stream<T> b) {
-    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a - b;}));
-  }
-
-  template<typename T>
-  stream<T> operator *(stream<T> a, stream<T> b) {
-    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a * b;}));
-  }
-
-  template<typename T>
-  stream<T> operator /(stream<T> a, stream<T> b) {
-    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a / b;}));
-  }
-
-  template<typename T>
-  stream<T> operator %(stream<T> a, stream<T> b) {
-    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a % b;}));
-  }
-
-  template<typename T>
-  stream<T> operator &(stream<T> a, stream<T> b) {
-    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a & b;}));
-  }
-
-  template<typename T>
-  stream<T> operator ^(stream<T> a, stream<T> b) {
-    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a ^ b;}));
-  }
-
-  template<typename T>
-  stream<T> operator |(stream<T> a, stream<T> b) {
-    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a | b;}));
-  }
-
-  template<typename T>
-  stream<T> operator &&(stream<T> a, stream<T> b) {
-    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a && b;}));
-  }
-
-  template<typename T>
-  stream<T> operator ||(stream<T> a, stream<T> b) {
-    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a || b;}));
-  }
-
-  template<typename T>
   void stream<T>::bind(const std::function<void(T)> function) {
     this->pimpl->bind_list.push_back(function);
   }
@@ -251,6 +163,321 @@ namespace spira {
   void stream<T>::push(T value) const {
     this->pimpl->value = value;
     this->call();
+  }
+
+  // Operator overload abstraction
+  template<typename T>
+  stream<T> operate(stream<T> a, stream<T> b, std::function<T(T, T)> operation) {
+    return a.combine(b, SAMPLED_BY::BOTH)
+      .map(std::function<T(std::pair<T, T>)>([operation](std::pair<T, T> value){
+            return operation(value.first, value.second);
+          }));
+  }
+
+  template<typename T>
+  stream<T> operate(stream<T> a, T b, std::function<T(T, T)> operation) {
+    return a.map(std::function<T(T)>([b, operation](T value){
+          return operation(value, b);
+        }));
+  }
+
+  template<typename T>
+  stream<T> operate(T a, stream<T> b, std::function<T(T, T)> operation) {
+    return b.map(std::function<T(T)>([a, operation](T value){
+          return operation(a, value);
+        }));
+  }
+
+  // Comparison operator overloads
+  template<typename T>
+  stream<T> operator ==(stream<T> a, stream<T> b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a == b;}));
+  }
+
+  template<typename T>
+  stream<T> operator !=(stream<T> a, stream<T> b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a != b;}));
+  }
+
+  template<typename T>
+  stream<T> operator <(stream<T> a, stream<T> b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a < b;}));
+  }
+
+  template<typename T>
+  stream<T> operator >(stream<T> a, stream<T> b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a > b;}));
+  }
+
+  template<typename T>
+  stream<T> operator <=(stream<T> a, stream<T> b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a <= b;}));
+  }
+
+  template<typename T>
+  stream<T> operator >=(stream<T> a, stream<T> b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a >= b;}));
+  }
+
+  // Comparison operator overloads (rhs)
+  template<typename T>
+  stream<T> operator ==(stream<T> a, T b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a == b;}));
+  }
+
+  template<typename T>
+  stream<T> operator !=(stream<T> a, T b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a != b;}));
+  }
+
+  template<typename T>
+  stream<T> operator <(stream<T> a, T b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a < b;}));
+  }
+
+  template<typename T>
+  stream<T> operator >(stream<T> a, T b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a > b;}));
+  }
+
+  template<typename T>
+  stream<T> operator <=(stream<T> a, T b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a <= b;}));
+  }
+
+  template<typename T>
+  stream<T> operator >=(stream<T> a, T b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a >= b;}));
+  }
+
+  // Comparison operator overloads (lhs)
+  template<typename T>
+  stream<T> operator ==(T a, stream<T> b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a == b;}));
+  }
+
+  template<typename T>
+  stream<T> operator !=(T a, stream<T> b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a != b;}));
+  }
+
+  template<typename T>
+  stream<T> operator <(T a, stream<T> b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a < b;}));
+  }
+
+  template<typename T>
+  stream<T> operator >(T a, stream<T> b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a > b;}));
+  }
+
+  template<typename T>
+  stream<T> operator <=(T a, stream<T> b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a <= b;}));
+  }
+
+  template<typename T>
+  stream<T> operator >=(T a, stream<T> b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a >= b;}));
+  }
+
+  // Arithmetic operator overloads
+  template<typename T>
+  stream<T> operator +(stream<T> a, stream<T> b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a + b;}));
+  }
+
+  template<typename T>
+  stream<T> operator -(stream<T> a, stream<T> b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a - b;}));
+  }
+
+  template<typename T>
+  stream<T> operator *(stream<T> a, stream<T> b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a * b;}));
+  }
+
+  template<typename T>
+  stream<T> operator /(stream<T> a, stream<T> b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a / b;}));
+  }
+
+  template<typename T>
+  stream<T> operator %(stream<T> a, stream<T> b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a % b;}));
+  }
+
+  // Arithmetic operator overloads (rhs)
+  template<typename T>
+  stream<T> operator +(stream<T> a, T b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a + b;}));
+  }
+
+  template<typename T>
+  stream<T> operator -(stream<T> a, T b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a - b;}));
+  }
+
+  template<typename T>
+  stream<T> operator *(stream<T> a, T b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a * b;}));
+  }
+
+  template<typename T>
+  stream<T> operator /(stream<T> a, T b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a / b;}));
+  }
+
+  template<typename T>
+  stream<T> operator %(stream<T> a, T b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a % b;}));
+  }
+
+  // Arithmetic operator overloads (lhs)
+  template<typename T>
+  stream<T> operator +(T a, stream<T> b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a + b;}));
+  }
+
+  template<typename T>
+  stream<T> operator -(T a, stream<T> b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a - b;}));
+  }
+
+  template<typename T>
+  stream<T> operator *(T a, stream<T> b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a * b;}));
+  }
+
+  template<typename T>
+  stream<T> operator /(T a, stream<T> b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a / b;}));
+  }
+
+  template<typename T>
+  stream<T> operator %(T a, stream<T> b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a % b;}));
+  }
+
+  // Bitwise operator overloads
+  template<typename T>
+  stream<T> operator ~(stream<T> a) {
+    return a.map(std::function<T(T)>([](T a){return ~a;}));
+  }
+
+  template<typename T>
+  stream<T> operator &(stream<T> a, stream<T> b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a & b;}));
+  }
+
+  template<typename T>
+  stream<T> operator ^(stream<T> a, stream<T> b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a ^ b;}));
+  }
+
+  template<typename T>
+  stream<T> operator |(stream<T> a, stream<T> b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a | b;}));
+  }
+
+  template<typename T>
+  stream<T> operator <<(stream<T> a, stream<T> b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a << b;}));
+  }
+
+  template<typename T>
+  stream<T> operator >>(stream<T> a, stream<T> b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a >> b;}));
+  }
+
+  // Bitwise operator overloads (rhs)
+  template<typename T>
+  stream<T> operator &(stream<T> a, T b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a & b;}));
+  }
+
+  template<typename T>
+  stream<T> operator ^(stream<T> a, T b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a ^ b;}));
+  }
+
+  template<typename T>
+  stream<T> operator |(stream<T> a, T b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a | b;}));
+  }
+
+  template<typename T>
+  stream<T> operator <<(stream<T> a, T b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a << b;}));
+  }
+
+  template<typename T>
+  stream<T> operator >>(stream<T> a, T b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a >> b;}));
+  }
+
+  // Bitwise operator overloads (lhs)
+  template<typename T>
+  stream<T> operator &(T a, stream<T> b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a & b;}));
+  }
+
+  template<typename T>
+  stream<T> operator ^(T a, stream<T> b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a ^ b;}));
+  }
+
+  template<typename T>
+  stream<T> operator |(T a, stream<T> b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a | b;}));
+  }
+
+  template<typename T>
+  stream<T> operator <<(T a, stream<T> b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a << b;}));
+  }
+
+  template<typename T>
+  stream<T> operator >>(T a, stream<T> b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a >> b;}));
+  }
+
+  // Logical operator overloads
+  template<typename T>
+  stream<T> operator !(stream<T> a) {
+    return a.map(std::function<T(T)>([](T a){return !a;}));
+  }
+
+  template<typename T>
+  stream<T> operator &&(stream<T> a, stream<T> b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a && b;}));
+  }
+
+  template<typename T>
+  stream<T> operator ||(stream<T> a, stream<T> b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a || b;}));
+  }
+
+  // Logical operator overloads (rhs)
+  template<typename T>
+  stream<T> operator &&(stream<T> a, T b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a && b;}));
+  }
+
+  template<typename T>
+  stream<T> operator ||(stream<T> a, T b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a || b;}));
+  }
+
+  // Logical operator overloads (lhs)
+  template<typename T>
+  stream<T> operator &&(T a, stream<T> b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a && b;}));
+  }
+
+  template<typename T>
+  stream<T> operator ||(T a, stream<T> b) {
+    return operate(a, b, std::function<T(T, T)>([](T a, T b){return a || b;}));
   }
 }
 

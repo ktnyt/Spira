@@ -120,7 +120,7 @@ namespace spira {
           ret.call();
         }
       });
-    other.glue([=](T value){
+    other.glue([=](U value){
         ret.pimpl->value.second = value;
         if(flag != SAMPLED_BY::FIRST) {
           ret.call();

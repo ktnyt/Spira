@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * source.hpp
+ * spira.hpp
  *
  * @author Copyright (C) 2015 Kotone Itaya
  * @version 2.0.0
@@ -26,21 +26,11 @@
  *
  *****************************************************************************/
 
-#ifndef __SPIRA_SOURCE_HPP__
-#define __SPIRA_SOURCE_HPP__
+#ifndef __SPIRA_SPIRA_HPP__
+#define __SPIRA_SPIRA_HPP__
 
-#include <memory>
-#include "stream.hpp"
-
-namespace spira {
-  template<typename T>
-  class source : private stream<T> {
-  public:
-    stream<T> draw();
-    void dump(T value);
-  };
-}
-
-#include "source_impl.hpp"
+#include "spira/stream.hpp"
+#include "spira/source.hpp"
+#include "spira/timer.hpp"
 
 #endif

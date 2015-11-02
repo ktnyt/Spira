@@ -70,3 +70,15 @@ if (test)
   # test executable.
   #add_test(that-other-test-I-made runUnitTests)
 endif()
+
+install(
+  TARGETS spira
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+  COMPONENT library)
+
+install(
+  DIRECTORY "${PROJECT_SOURCE_DIR}/include/spira"
+  DESTINATION include
+  FILES_MATCHING PATTERN "*.*hpp")

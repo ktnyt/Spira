@@ -27,7 +27,7 @@
  *****************************************************************************/
 
 #include "gtest/gtest.h"
-#include "spira.hpp"
+#include "spira/spira.hpp"
 
 namespace spira {
   namespace test {

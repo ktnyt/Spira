@@ -26,7 +26,7 @@
  *
  *****************************************************************************/
 
-#include "timer.hpp"
+#include "spira/timer.hpp"
 
 namespace spira {
   struct timer::impl {

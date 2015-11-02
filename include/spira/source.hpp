@@ -1,9 +1,9 @@
 /******************************************************************************
  *
- * timer.hpp
+ * source.hpp
  *
  * @author Copyright (C) 2015 Kotone Itaya
- * @version 1.0.0
+ * @version 2.0.0
  * @created  2015/10/15 Kotone Itaya -- Created!
  * @@
  *
@@ -26,25 +26,21 @@
  *
  *****************************************************************************/
 
-#ifndef __SPIRA_TIMER_HPP__
-#define __SPIRA_TIMER_HPP__
+#ifndef __SPIRA_SOURCE_HPP__
+#define __SPIRA_SOURCE_HPP__
 
-#include <chrono>
 #include <memory>
-#include "source.hpp"
+#include "spira/stream.hpp"
 
 namespace spira {
-  class timer : public source<unsigned long long int> {
+  template<typename T>
+  class source : public stream<T> {
   public:
-    timer(double fps=1000);
-    timer(const timer& other);
-    timer& operator =(timer& other);
-    friend void swap(timer& a, timer& b);
-    void poll();
-    void reset();
-  private:
-    struct impl; std::shared_ptr<impl> pimpl;
+    stream<T> draw();
+    void dump(T value);
   };
 }
+
+#include "source_impl.hpp"
 
 #endif

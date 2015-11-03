@@ -44,12 +44,22 @@ namespace spira {
   stream<T>::stream() : pimpl(std::shared_ptr<impl>(new impl())) {}
 
   template<typename T>
-  stream<T>::stream(const stream<T>& other) : pimpl(std::shared_ptr<impl>(new impl())) {
-    this->pimpl = other.pimpl;
+  stream<T>::stream(const stream<T>& other) : pimpl(other.pimpl) {}
+
+  template<typename T>
+  stream<T>::stream(stream<T>&& other) noexcept : pimpl(other.pimpl) {
+    other.pimpl = nullptr;
   }
 
   template<typename T>
-  stream<T>& stream<T>::operator =(stream<T>& other) {
+  stream<T>& stream<T>::operator =(const stream<T>& other) {
+    stream<T> another(other);
+    *this = std::move(another);
+    return *this;
+  }
+
+  template<typename T>
+  stream<T>& stream<T>::operator =(stream<T>&& other) noexcept {
     swap(*this, other);
     return *this;
   }

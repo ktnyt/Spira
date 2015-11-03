@@ -42,12 +42,23 @@ namespace spira {
     this->reset();
   }
 
-  timer::timer(const timer& other) {
-    this->pimpl = other.pimpl;
+  timer::timer(const timer& other) : pimpl(other.pimpl) {
+    this->reset();
   }
 
-  timer& timer::operator =(timer& other) {
-    swap(*this, other);
+  timer::timer(timer&& other) noexcept : pimpl(other.pimpl) {
+    other.pimpl = nullptr;
+    this->reset();
+  }
+
+  timer& timer::operator =(const timer& other) {
+    timer another(other);
+    *this = std::move(another);
+    return *this;
+  }
+
+  timer& timer::operator =(timer&& other) noexcept {
+    std::swap(*this, other);
     return *this;
   }
 

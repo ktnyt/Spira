@@ -46,7 +46,9 @@ namespace spira {
 
     stream();
     stream(const stream<T>& other);
-    stream<T>& operator =(stream<T>& other);
+    stream(stream<T>&& other) noexcept;
+    stream<T>& operator =(const stream<T>& other);
+    stream<T>& operator =(stream<T>&& other) noexcept;
     template<typename U>
     friend void swap(stream<U>& a, stream<U>& b);
 

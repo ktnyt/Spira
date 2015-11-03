@@ -39,7 +39,9 @@ namespace spira {
   public:
     timer(double fps=1000);
     timer(const timer& other);
-    timer& operator =(timer& other);
+    timer(timer&& other) noexcept;
+    timer& operator =(const timer& other);
+    timer& operator =(timer&& other) noexcept;
     friend void swap(timer& a, timer& b);
     void poll();
     void reset();

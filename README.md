@@ -1,4 +1,4 @@
-# SpiraFRP version 2
+# SpiraFRP version 2.1.0
 Yet another C++ library for functional reactive style programming inspired by [Bacon.js](https://baconjs.github.io/).
 
 Currently, C++11 is required for compiling.
@@ -6,7 +6,7 @@ Currently, C++11 is required for compiling.
 Concept & Quick usage
 ---------------------
 Include the header to use SpiraFRP in your project.  
-No linking required (for now).
+Link your binary with `-lspira`.
 
 ```c++
 #include "spira.hpp"
@@ -56,21 +56,44 @@ spira::stream<int> stream1 = stream0.mirror().unique();
 
 Operators
 ---------
-Some operators are overloaded and can be used on primitive typed `stream`s.
+Most operators are overloaded and can be used on `stream`s as well as its template type.
 
-- +
-- -
-- *
-- /
-- %
+Comparison Operators
+- `==`
+- `!=`
+- `<`
+- `<`
+- `<=`
+- `>=`
+
+Arithmetic Operators
+- `+`
+- `-`
+- `*`
+- `/`
+- `%`
+
+Bitwise Operators
+- `~`
+- `&`
+- `^`
+- `|`
+- `<<`
+- `>>`
+
+Logical Operators
+- `!`
+- `&&`
+- `||`
 
 ```c++
-spira::stream<int> stream2 = stream0 + stream1;
+spira::stream<int> stream2 = stream0 + stream1; // On streams
+spira::stream<int> stream3 = stream2 + 42; // With constants
 ```
+
 
 Future Work (by priority)
 -------------------------
-- `std::list` source generator
-- `timer` source generator
 - Documentation
+- `std::list` source generator
 - boost support for pre-C++11 compilers

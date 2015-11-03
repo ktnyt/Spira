@@ -5,8 +5,11 @@ option(benchmark "Build all benchmarks." OFF)
 
 set(PROJECT_NAME SpiraFRP)
 project(${PROJECT_NAME})
+set(SPIRA_VERSION_MAJOR 2)
+set(SPIRA_VERSION_MINOR 1)
+set(SPIRA_VERSION_PATCH 0)
 
-set(CMAKE_CXX_FLAGS "-g -Wall -O0")
+set(CMAKE_CXX_FLAGS "-g -Wall -O2")
 
 # If you want your own include/ directory, set this, and then you can do
 # include_directories(${COMMON_INCLUDES}) in other CMakeLists.txt files.

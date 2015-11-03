@@ -5,6 +5,7 @@
  * @author Copyright (C) 2015 Kotone Itaya
  * @version 2.0.0
  * @created  2015/10/15 Kotone Itaya -- Created!
+ * @modified 2015/11/02 Kotone Itaya -- Added timer.hpp.
  * @@
  *
  * Licensed to the Apache Software Foundation (ASF) under one

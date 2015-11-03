@@ -3,8 +3,8 @@
  * timer.cpp
  *
  * @author Copyright (C) 2015 Kotone Itaya
- * @version 1.0.0
- * @created  2015/10/15 Kotone Itaya -- Created!
+ * @version 2.1.0
+ * @created  2015/11/02 Kotone Itaya -- Created!
  * @@
  *
  * Licensed to the Apache Software Foundation (ASF) under one

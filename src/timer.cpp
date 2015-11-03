@@ -3,8 +3,8 @@
  * timer.cpp
  *
  * @author Copyright (C) 2015 Kotone Itaya
- * @version 1.0.0
- * @created  2015/10/15 Kotone Itaya -- Created!
+ * @version 2.1.0
+ * @created  2015/11/02 Kotone Itaya -- Created!
  * @@
  *
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -38,10 +38,7 @@ namespace spira {
   };
 
   timer::timer(double fps) : pimpl(std::shared_ptr<impl>(new impl())) {
-    this->pimpl->init = std::chrono::steady_clock::now();
-    this->pimpl->fps = fps;
-    this->pimpl->frame = 0;
-    this->pimpl->time = 0;
+    this->reset();
   }
 
   timer::timer(const timer& other) {

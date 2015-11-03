@@ -38,6 +38,7 @@ namespace spira {
   };
 
   timer::timer(double fps) : pimpl(std::shared_ptr<impl>(new impl())) {
+    this->pimpl->fps = fps;
     this->reset();
   }
 

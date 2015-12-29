@@ -55,14 +55,14 @@ namespace spira {
     // Stream operations
     stream<T> unique();
     stream<T> mirror();
-    stream<T> merge(stream<T>& other);
+    stream<T> merge(stream<T> other);
     stream<T> filter(std::function<bool(T)> filter);
-    stream<T> whilst(stream<bool>& whilst);
+    stream<T> whilst(stream<bool> whilst);
     stream<T> scan(T seed, const std::function<T(T,T)> scan);
     template<typename U>
     stream<U> map(std::function<U(T)> map);
     template<typename U>
-    stream<std::pair<T, U> > combine(stream<U>& other, SAMPLED_BY flag);
+    stream<std::pair<T, U> > combine(stream<U> other, SAMPLED_BY flag);
 
     // For binding side-effects
     void bind(const std::function<void(T)> function);
@@ -72,9 +72,9 @@ namespace spira {
   protected:
     // Protected for call from `source`
     void push(T value) const;
-  private:
     void listcall(const std::list<std::function<void(T)> > list) const;
     void call() const;
+  private:
     struct impl; std::shared_ptr<impl> pimpl;
   };
 

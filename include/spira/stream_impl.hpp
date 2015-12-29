@@ -84,7 +84,7 @@ namespace spira {
   }
 
   template<typename T>
-  stream<T> stream<T>::merge(stream<T>& other) {
+  stream<T> stream<T>::merge(stream<T> other) {
     stream<T> ret;
     this->hook([=](T value){ret.push(value);});
     other.hook([=](T value){ret.push(value);});
@@ -99,7 +99,7 @@ namespace spira {
   }
 
   template<typename T>
-  stream<T> stream<T>::whilst(stream<bool>& whilst) {
+  stream<T> stream<T>::whilst(stream<bool> whilst) {
     stream<T> ret;
     this->hook([=](T value){if(whilst.pimpl->value) ret.push(value);});
     return ret;
@@ -122,7 +122,7 @@ namespace spira {
 
   template<typename T>
   template<typename U>
-  stream<std::pair<T, U> > stream<T>::combine(stream<U>& other, SAMPLED_BY flag) {
+  stream<std::pair<T, U> > stream<T>::combine(stream<U> other, SAMPLED_BY flag) {
     stream<std::pair<T, U> > ret;
     ret.pimpl->value.first = this->pimpl->value;
     ret.pimpl->value.second = other.pimpl->value;

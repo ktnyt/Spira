@@ -1,12 +1,10 @@
 /******************************************************************************
  *
- * spira.hpp
+ * include/spira/state.hpp
  *
  * @author Copyright (C) 2015 Kotone Itaya
  * @version 2.2.0
- * @created  2015/10/15 Kotone Itaya -- Created!
- * @modified 2015/11/02 Kotone Itaya -- Added timer.hpp.
- * @modified 2015/12/30 Kotone Itaya -- Added state.hpp.
+ * @created  2015/12/30 Kotone Itaya -- Created!
  * @@
  *
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -28,12 +26,33 @@
  *
  *****************************************************************************/
 
-#ifndef __SPIRA_SPIRA_HPP__
-#define __SPIRA_SPIRA_HPP__
+#ifndef __SPIRA_STATE_HPP__
+#define __SPIRA_STATE_HPP__
 
-#include "spira/state.hpp"
+#include <list>
+#include <memory>
+#include <cstdint>
 #include "spira/stream.hpp"
-#include "spira/source.hpp"
-#include "spira/timer.hpp"
+
+namespace spira {
+  template<typename T>
+  class state : public stream<T> {
+  public:
+    state();
+    state(stream<T> origin);
+    state(const state& other);
+    state(state&& other) noexcept;
+    state& operator =(const state& other);
+    state& operator =(state&& other) noexcept;
+    friend void swap(state& a, state& b);
+    void setup(stream<T> origin);
+    void update();
+    void latest();
+  private:
+    struct impl; std::shared_ptr<impl> pimpl;
+  };
+}
+
+#include "state_impl.hpp"
 
 #endif

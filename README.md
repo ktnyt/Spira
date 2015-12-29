@@ -43,12 +43,12 @@ The following is a table of available data manipulation operations on a `stream<
 |:------|:----------------------------|:--------------------------------------|
 |unique |None                         |Notifies only on value changes.        |
 |mirror |None                         |Bypasses values from the parent.       |
-|merge  |stream<T>&                   |Merges two streams into one.           |
+|merge  |stream<T>                    |Merges two streams into one.           |
 |filter |std::function<bool(T)>       |Filters stream with given function.    |
-|whilst |stream<bool>&                |Notifies while given stream is true.   |
+|whilst |stream<bool>                 |Notifies while given stream is true.   |
 |scan   |T seed, std::function<T(T,T)>|Accumulates values with given function.|
 |map    |std::function<U(T)>          |Maps values with given function.       |
-|combine|stream<U>&, SAMPLED_BY       |Combines two streams into a pair.      |
+|combine|stream<U>, SAMPLED_BY        |Combines two streams into a pair.      |
 
 These methods can be chained as follows:
 

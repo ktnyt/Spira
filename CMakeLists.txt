@@ -58,7 +58,7 @@ if (test)
   ##############
   # Unit Tests
   ##############
-  add_executable(runUnitTests tests/stream.cpp tests/timer.cpp)
+  add_executable(runUnitTests tests/stream.cpp tests/timer.cpp tests/state.cpp)
 
   target_link_libraries(runUnitTests spira)
 

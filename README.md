@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/ktnyt/SpiraFRP.svg)](https://travis-ci.org/ktnyt/SpiraFRP)
 
-# SpiraFRP version 2.1.0
+# SpiraFRP version 2.2.0
 Yet another C++ library for functional reactive style programming inspired by [Bacon.js](https://baconjs.github.io/).
 
 Currently, C++11 is required for compiling.

@@ -31,11 +31,12 @@
 
 #include <chrono>
 #include <memory>
+#include <cstdint>
 #include "spira/stream.hpp"
 #include "spira/source.hpp"
 
 namespace spira {
-  class timer : public source<unsigned long long int> {
+  class timer : public source<int64_t> {
   public:
     timer(double fps=1000);
     timer(const timer& other);
@@ -43,6 +44,8 @@ namespace spira {
     timer& operator =(const timer& other);
     timer& operator =(timer&& other) noexcept;
     friend void swap(timer& a, timer& b);
+    void prebind(const std::function<void(int64_t)> function);
+    void postbind(const std::function<void(int64_t)> function);
     void poll();
     void reset();
   private:

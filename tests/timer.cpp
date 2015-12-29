@@ -26,6 +26,7 @@
  *
  *****************************************************************************/
 
+#include <cstdint>
 #include "gtest/gtest.h"
 #include "spira/spira.hpp"
 
@@ -33,10 +34,10 @@ namespace spira {
   namespace test {
     TEST(timer, simple) {
       timer timer0(58);
-      stream<unsigned long long int> stream0 = timer0.draw();
-      unsigned long long int out0(0);
+      stream<int64_t> stream0 = timer0.draw();
+      int64_t out0(0);
 
-      stream0.bind([&out0](unsigned long long int value){out0 = value;});
+      stream0.bind([&out0](int64_t value){out0 = value;});
 
       std::chrono::steady_clock::time_point init = std::chrono::steady_clock::now();
 
@@ -56,10 +57,10 @@ namespace spira {
 
     TEST(timer, reset) {
       timer timer0(58);
-      stream<unsigned long long int> stream0 = timer0.draw();
-      unsigned long long int out0(0);
+      stream<int64_t> stream0 = timer0.draw();
+      int64_t out0(0);
 
-      stream0.bind([&out0](unsigned long long int value){out0 = value;});
+      stream0.bind([&out0](int64_t value){out0 = value;});
 
       std::chrono::steady_clock::time_point init = std::chrono::steady_clock::now();
 

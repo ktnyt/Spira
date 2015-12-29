@@ -33,8 +33,10 @@ namespace spira {
     std::chrono::steady_clock::time_point init;
     std::chrono::steady_clock::time_point curr;
     double fps;
-    unsigned long long int frame;
-    unsigned long long int time;
+    int64_t frame;
+    int64_t time;
+    std::list<std::function<void(int64_t)> > pre;
+    std::list<std::function<void(int64_t)> > post;
   };
 
   timer::timer(double fps) : pimpl(std::shared_ptr<impl>(new impl())) {
@@ -66,13 +68,25 @@ namespace spira {
     std::swap(a.pimpl, b.pimpl);
   }
 
+  void timer::prebind(const std::function<void(int64_t)> function) {
+    this->pimpl->pre.push_back(function);
+  }
+
+  void timer::postbind(const std::function<void(int64_t)> function) {
+    this->pimpl->post.push_back(function);
+  }
+
   void timer::poll() {
     this->pimpl->curr = std::chrono::steady_clock::now();
     std::chrono::nanoseconds duration = (this->pimpl->curr - this->pimpl->init);
     this->pimpl->time = duration.count();
-    unsigned long long int now = ((this->pimpl->time * this->pimpl->fps) / 1000000000);
+    int64_t now = ((this->pimpl->time * this->pimpl->fps) / 1000000000);
     if(now > this->pimpl->frame) {
-      while(now > this->pimpl->frame) this->dump(++this->pimpl->frame);
+      while(now > this->pimpl->frame) {
+        this->listcall(this->pimpl->pre);
+        this->dump(++this->pimpl->frame);
+        this->listcall(this->pimpl->post);
+      }
     }
   }
 

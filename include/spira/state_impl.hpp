@@ -40,7 +40,7 @@ namespace spira {
 
   template<typename T>
   state<T>::state(stream<T> origin) : pimpl(new impl()) {
-    this->setup(origin);
+    this->plug(origin);
   }
   
   template<typename T>
@@ -70,7 +70,7 @@ namespace spira {
   }
 
   template<typename T>
-  void state<T>::setup(stream<T> origin) {
+  void state<T>::plug(stream<T> origin) {
     origin.bind([=](T value){
         pimpl->buffer.push_back(value);
       });

@@ -45,7 +45,7 @@ namespace spira {
     state& operator =(const state& other);
     state& operator =(state&& other) noexcept;
     friend void swap(state& a, state& b);
-    void setup(stream<T> origin);
+    void plug(stream<T> origin);
     void update();
     void latest();
   private:

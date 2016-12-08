@@ -1,0 +1,8 @@
+if (SPIRA_TEST)
+  enable_testing()
+  message(STATUS ${gtest_SOURCE_DIR})
+  include_directories(${gtest_SOURCE_DIR}/include)
+  add_executable(unit_tests stream.cpp timer.cpp state.cpp)
+  target_link_libraries(unit_tests spira gtest gtest_main)
+  add_test(NAME spira-test COMMAND unit_tests)
+endif()

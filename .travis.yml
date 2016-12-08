@@ -19,4 +19,4 @@ before_script:
   - cmake .. -DCMAKE_BUILD_TYPE=RELEASE -Dtest=true
 script:
   - make
-  - ./runUnitTests
+  - ./tests/unit_tests
